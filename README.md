@@ -14,7 +14,7 @@ The slides in HTML format can be seen at the URLs:
 
 or
 
-- TODO: gh-pages branch
+- https://jmcastagnetto.github.io/coursera-data-products-july2015/
 
 
 -- Jesus M. Castagnetto
