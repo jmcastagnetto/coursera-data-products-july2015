@@ -3,7 +3,7 @@ for the "Developing Data Products" class at Coursera.
 
 The code for Shiny app is in the
 [predict-child-height](https://github.com/jmcastagnetto/coursera-data-products-july2015/tree/master/predict-child-height)
-directory,and the code for
+directory, and the code for
 the RPresentation slides in the 
 [rpres-predict-child-height](https://github.com/jmcastagnetto/coursera-data-products-july2015/tree/master/rpres-predict-child-height)
 directory
