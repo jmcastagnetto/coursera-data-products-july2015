@@ -51,9 +51,9 @@ child's gender is an important factor in any predictive model.
 Picking a linear model
 ========================================================
 
-First I used Galton's assumption, considerin only
-the mid-parent's height (not a great $R^2$),
-so also tried a couple of models that included the child's gender, as
+First I used Galton's assumption, considering only
+the mid-parent's height, resulting in a model with a low $R^2$.
+That is why I tried a couple more models that included the child's gender, as
 summarized below:
 
 
