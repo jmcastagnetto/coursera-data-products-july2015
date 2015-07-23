@@ -3,7 +3,7 @@ library(shiny)
 # Define UI for our height prediction application
 shinyUI(fluidPage(
 
-  # Application title
+  #   Application title
   titlePanel("Predict the height of your child"),
 
   # Sidebar with a couple of numeric inputs and a radio button
@@ -35,8 +35,12 @@ shinyUI(fluidPage(
     mainPanel(
       htmlOutput("parentsText"),
       htmlOutput("prediction"),
-      plotOutput("barsPlot"),
-      plotOutput("pairsPlot")
+      plotOutput("barsPlot", width = "50%")
     )
+  ),
+
+  fluidRow(
+    column(12,
+           includeHTML("appdescription.html"))
   )
 ))
