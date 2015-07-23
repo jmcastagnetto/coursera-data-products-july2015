@@ -10,7 +10,7 @@ directory
 
 You can play with the Shiny App at the URL:
 
-- https://jmcastagnetto.shinyapps.io/predict-child-height
+- https://jesuscastagnetto.shinyapps.io/predict-child-height
 
 The slides in HTML format can be seen at the URLs:
 
