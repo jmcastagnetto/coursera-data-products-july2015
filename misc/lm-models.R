@@ -32,5 +32,27 @@ plot(gf$ch ~ p1, col=gf$gender, pch=(as.numeric(gf$gender) + 20))
 plot(gf$ch ~ p2, col=gf$gender)
 plot(gf$ch ~ p3, col=gf$gender)
 
+# Very slight modification from http://stackoverflow.com/a/19990107
+ggQQ = function(lm) {
+  # extract standardized residuals from the fit
+  d <- data.frame(std.resid = rstandard(lm))
+  # calculate 1Q/4Q line
+  y <- quantile(d$std.resid[!is.na(d$std.resid)], c(0.25, 0.75))
+  x <- qnorm(c(0.25, 0.75))
+  slope <- diff(y)/diff(x)
+  int <- y[1L] - slope * x[1L]
+
+  p <- ggplot(data=d, aes(sample=std.resid)) +
+    stat_qq(shape=1, size=3) +           # open circles
+    labs(title="Normal Q-Q",             # plot title
+         x="Theoretical Quantiles",      # x-axis label
+         y="Standardized Residuals") +   # y-axis label
+    geom_abline(slope = slope, intercept = int, linetype="dashed") + # dashed reference line
+    theme_light()
+  return(p)
+}
+
+ggQQ(m2)
+
 library(GGally)
 ggpairs(gf[c("ch", "fh", "mh", "gender")], binwidth=10)

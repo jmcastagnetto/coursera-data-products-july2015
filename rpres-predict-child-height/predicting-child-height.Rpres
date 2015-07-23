@@ -1,7 +1,9 @@
-Interactive prediction of a child's height
+Interactive prediction of a child's height - Revisiting a Victorian Era dataset
 ========================================================
 author: Jesus M. Castagnetto
 date: 2015-07-22
+width: 1200
+height: 900
 transition: rotate
 
 ```{r, echo=FALSE, results="hide"}
@@ -10,11 +12,15 @@ data("GaltonFamilies")
 gf <- GaltonFamilies
 # convert from inches to cm
 library(dplyr)
+library(GGally)
+library(ggplot2)
 gf <- gf %>% mutate(fh=father*2.54,
                     mh=mother*2.54,
                     mph=midparentHeight*2.54,
                     ch=childHeight*2.54)
-
+m1 <- lm(ch ~ mph, data=gf)
+m2 <- lm(ch ~ mph + gender, data=gf)
+m3 <- lm(ch ~ fh + mh + gender, data=gf)
 ```
 
 Background
@@ -41,7 +47,6 @@ Looking at the correlation
 ========================================================
 
 ```{r, echo=FALSE, fig.height=5}
-library(GGally)
 ggpairs(gf[c("ch", "fh", "mh", "mph", "gender")], binwidth=10)
 ```
 
@@ -53,8 +58,8 @@ The **gender** factor: female/male.
 
 ***
 
-The child's height is moderately correlated with the father,
-mother and midparent's heights.
+The child's height is moderately correlated with the father's,
+mother's and midparent's heights.
 
 Considering the sample distributions of
 heights by gender, we observe a distinct difference, so the
@@ -63,29 +68,65 @@ child's gender is an important factor in any predictive model.
 Picking a linear model
 ========================================================
 
-For the model, I used Galton's assumption which considers only
-the mid-parent's height,
-but also tried other models that included the child's gender, as
+First I used Galton's assumption, considerin only
+the mid-parent's height (not a great $R^2$),
+so also tried a couple of models that included the child's gender, as
 summarized below:
 
 ```{r echo=FALSE}
 modsum <- data.frame(
-            Model=c(
-              "childHeight ~ midparentHeight",
-              "childHeight ~ midparentHeight + gender",
-              "childHeight ~ father + mother + gender"
+            model=1:3,
+            form=c(
+              "ch ~ mph",
+              "ch ~ mph + gender",
+              "ch ~ fh + mh + gender"
             ),
-            `Adjusted R-squared`=c(
-              0.102,
-              0.6324,
-              0.6342
+            adjr2=c(
+              summary(m1)$r.squared,
+              summary(m2)$r.squared,
+              summary(m3)$r.squared
             )
           )
-kable(modsum)
+kable(modsum, digits = 4, col.names = c("Model", "Formula", "Adj. $R^2$"))
 ```
 
-The last model gives a slightly better fit, and is the one I used for the Shiny App:
-"[Predict the height of your child](https://jmcastagnetto.shinyapps.io/predict-child-height)".
+<small>
+*Where*:
+`fh`: father's height, `mh`: mother's height,
+`mph`: midparent's height, `ch`: child's height,
+`gender`: child's gender
+</small>
+
+
+***
+
+```{r echo=FALSE}
+# Very slight modification from http://stackoverflow.com/a/19990107
+ggQQ = function(lm, title) {
+  # extract standardized residuals from the fit
+  d <- data.frame(std.resid = rstandard(lm))
+  # calculate 1Q/4Q line
+  y <- quantile(d$std.resid[!is.na(d$std.resid)], c(0.25, 0.75))
+  x <- qnorm(c(0.25, 0.75))
+  slope <- diff(y)/diff(x)
+  int <- y[1L] - slope * x[1L]
+
+  p <- ggplot(data=d, aes(sample=std.resid)) +
+    stat_qq(shape=1, size=3) +           # open circles
+    labs(title=paste("Normal Q-Q:", title),             # plot title
+         x="Theoretical Quantiles",      # x-axis label
+         y="Standardized Residuals") +   # y-axis label
+    geom_abline(slope = slope, intercept = int, linetype="dashed") + # dashed reference line
+    theme_light()
+  return(p)
+}
+ggQQ(m3, "Model 3")
+```
+
+
+The last model gives a slightly better fit, with a reasonable QQ-plot, and is
+the one I used for the Shiny App.
+
 
 
 Final thoughts
@@ -100,19 +141,11 @@ Final thoughts
   a phenotypical trait such as height, but that is not the case (*vide infra*),
   the old Victorian method is not only cost effective, but also more robust.
 
+Go and play with [my Shiny App](https://jmcastagnetto.shinyapps.io/predict-child-height) --
+Read the [code @github](https://github.com/jmcastagnetto/coursera-data-products-july2015)
+
 <small>
 Aulchenko, Y.S.; et. al.
 "[Predicting human height by Victorian and genomic methods](http://www.nature.com/ejhg/journal/v17/n8/full/ejhg20095a.html)"
 European Journal of Human Genetics (2009) 17, 1070–1075, DOI: 10.1038/ejhg.2009.5
 </small>
-
-
-Thanks for watching!
-========================================================
-
-Now go a play my Shiny App:
-"[Predict the height of your child](https://jmcastagnetto.shinyapps.io/predict-child-height)".
-
-The code for this little monstrosity (including this presentation) is at
-[https://github.com/jmcastagnetto/coursera-data-products-july2015](https://github.com/jmcastagnetto/coursera-data-products-july2015)
-

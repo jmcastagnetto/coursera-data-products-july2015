@@ -1,7 +1,9 @@
-Interactive prediction of a child's height
+Interactive prediction of a child's height - Revisiting a Victorian Era dataset
 ========================================================
 author: Jesus M. Castagnetto
 date: 2015-07-22
+width: 1200
+height: 900
 transition: rotate
 
 
@@ -39,8 +41,8 @@ The **gender** factor: female/male.
 
 ***
 
-The child's height is moderately correlated with the father,
-mother and midparent's heights.
+The child's height is moderately correlated with the father's,
+mother's and midparent's heights.
 
 Considering the sample distributions of
 heights by gender, we observe a distinct difference, so the
@@ -49,20 +51,34 @@ child's gender is an important factor in any predictive model.
 Picking a linear model
 ========================================================
 
-For the model, I used Galton's assumption which considers only
-the mid-parent's height,
-but also tried other models that included the child's gender, as
+First I used Galton's assumption, considerin only
+the mid-parent's height (not a great $R^2$),
+so also tried a couple of models that included the child's gender, as
 summarized below:
 
 
-|Model                                  | Adjusted.R.squared|
-|:--------------------------------------|------------------:|
-|childHeight ~ midparentHeight          |             0.1020|
-|childHeight ~ midparentHeight + gender |             0.6324|
-|childHeight ~ father + mother + gender |             0.6342|
+| Model|Formula               | Adj. $R^2$|
+|-----:|:---------------------|----------:|
+|     1|ch ~ mph              |     0.1030|
+|     2|ch ~ mph + gender     |     0.6332|
+|     3|ch ~ fh + mh + gender |     0.6354|
 
-The last model gives a slightly better fit, and is the one I used for the Shiny App:
-"[Predict the height of your child](https://jmcastagnetto.shinyapps.io/predict-child-height)".
+<small>
+*Where*:
+`fh`: father's height, `mh`: mother's height,
+`mph`: midparent's height, `ch`: child's height,
+`gender`: child's gender
+</small>
+
+
+***
+
+![plot of chunk unnamed-chunk-4](predicting-child-height-figure/unnamed-chunk-4-1.png) 
+
+
+The last model gives a slightly better fit, with a reasonable QQ-plot, and is
+the one I used for the Shiny App.
+
 
 
 Final thoughts
@@ -77,19 +93,11 @@ Final thoughts
   a phenotypical trait such as height, but that is not the case (*vide infra*),
   the old Victorian method is not only cost effective, but also more robust.
 
+Go and play with [my Shiny App](https://jmcastagnetto.shinyapps.io/predict-child-height) --
+Read the [code @github](https://github.com/jmcastagnetto/coursera-data-products-july2015)
+
 <small>
 Aulchenko, Y.S.; et. al.
 "[Predicting human height by Victorian and genomic methods](http://www.nature.com/ejhg/journal/v17/n8/full/ejhg20095a.html)"
 European Journal of Human Genetics (2009) 17, 1070–1075, DOI: 10.1038/ejhg.2009.5
 </small>
-
-
-Thanks for watching!
-========================================================
-
-Now go a play my Shiny App:
-"[Predict the height of your child](https://jmcastagnetto.shinyapps.io/predict-child-height)".
-
-The code for this little monstrosity (including this presentation) is at
-[https://github.com/jmcastagnetto/coursera-data-products-july2015](https://github.com/jmcastagnetto/coursera-data-products-july2015)
-
