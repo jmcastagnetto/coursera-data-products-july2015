@@ -14,7 +14,7 @@ shinyUI(fluidPage(
                of the father and mother, as well as your child's gender."),
       helpText("Please input the required values below:"),
       numericInput(inputId = "inFh",
-                   label = "Father' height (cm.):",
+                   label = "Father's height (cm.):",
                    value = 175, # average height of fathers
                    min = 150,
                    max = 200,
