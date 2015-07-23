@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Interactive prediction of a child's height</title>
+  <title>Interactive prediction of a child's height - Revisiting a Victorian Era dataset</title>
     
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -736,6 +736,16 @@ hljs.initHighlightingOnLoad();
 </script>
 
    
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    showProcessingMessages: false,
+    messageStyle: "none"
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
   
 
 
@@ -749,7 +759,7 @@ hljs.initHighlightingOnLoad();
   <div class="slides">
 
 <section data-state="section" data-transition="default" data-transition-speed="default">
-<h1>Interactive prediction of a child&#x27;s height</h1><p>Jesus M. Castagnetto<br/>2015-07-22</p>
+<h1>Interactive prediction of a child&#x27;s height - Revisiting a Victorian Era dataset</h1><p>Jesus M. Castagnetto<br/>2015-07-22</p>
 
 <div class="slideContent" >
 
@@ -798,8 +808,8 @@ The <strong>gender</strong> factor: female/male.
 <div class="column column2 slideContent" >
 
 
-<p>The child&#39;s height is moderately correlated with the father,
-mother and midparent&#39;s heights.</p>
+<p>The child&#39;s height is moderately correlated with the father&#39;s,
+mother&#39;s and midparent&#39;s heights.</p>
 
 <p>Considering the sample distributions of
 heights by gender, we observe a distinct difference, so the
@@ -810,34 +820,53 @@ child&#39;s gender is an important factor in any predictive model.</p>
 </section>
 <section data-transition="default" data-transition-speed="default">
 <h3>Picking a linear model</h3>
-<div class="slideContent" >
-<p>For the model, I used Galton&#39;s assumption which considers only
-the mid-parent&#39;s height,
-but also tried other models that included the child&#39;s gender, as
+<div class="column column1 slideContent" >
+<p>First I used Galton&#39;s assumption, considerin only
+the mid-parent&#39;s height (not a great \( R^2 \)),
+so also tried a couple of models that included the child&#39;s gender, as
 summarized below:</p>
 
 <table><thead>
 <tr>
-<th align="left">Model</th>
-<th align="right">Adjusted.R.squared</th>
+<th align="right">Model</th>
+<th align="left">Formula</th>
+<th align="right">Adj. \( R^2 \)</th>
 </tr>
 </thead><tbody>
 <tr>
-<td align="left">childHeight ~ midparentHeight</td>
-<td align="right">0.1020</td>
+<td align="right">1</td>
+<td align="left">ch ~ mph</td>
+<td align="right">0.1030</td>
 </tr>
 <tr>
-<td align="left">childHeight ~ midparentHeight + gender</td>
-<td align="right">0.6324</td>
+<td align="right">2</td>
+<td align="left">ch ~ mph + gender</td>
+<td align="right">0.6332</td>
 </tr>
 <tr>
-<td align="left">childHeight ~ father + mother + gender</td>
-<td align="right">0.6342</td>
+<td align="right">3</td>
+<td align="left">ch ~ fh + mh + gender</td>
+<td align="right">0.6354</td>
 </tr>
 </tbody></table>
 
-<p>The last model gives a slightly better fit, and is the one I used for the Shiny App:
-&ldquo;<a href="https://jmcastagnetto.shinyapps.io/predict-child-height">Predict the height of your child</a>&rdquo;.</p>
+<p><small>
+<em>Where</em>:
+<code>fh</code>: father&#39;s height, <code>mh</code>: mother&#39;s height,
+<code>mph</code>: midparent&#39;s height, <code>ch</code>: child&#39;s height,
+<code>gender</code>: child&#39;s gender
+</small></p>
+
+
+</div>
+
+<div class="column column2 slideContent" >
+
+
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-4"/> </p>
+
+<p>The last model gives a slightly better fit, with a reasonable QQ-plot, and is
+the one I used for the Shiny App.</p>
 
 </div>
 
@@ -856,23 +885,14 @@ a phenotypical trait such as height, but that is not the case (<em>vide infra</e
 the old Victorian method is not only cost effective, but also more robust.</li>
 </ul>
 
+<p>Go and play with <a href="https://jmcastagnetto.shinyapps.io/predict-child-height">my Shiny App</a> &ndash;
+Read the <a href="https://github.com/jmcastagnetto/coursera-data-products-july2015">code @github</a></p>
+
 <p><small>
 Aulchenko, Y.S.; et. al.
 &ldquo;<a href="http://www.nature.com/ejhg/journal/v17/n8/full/ejhg20095a.html">Predicting human height by Victorian and genomic methods</a>&rdquo;
 European Journal of Human Genetics (2009) 17, 1070–1075, DOI: 10.1038/ejhg.2009.5
 </small></p>
-
-</div>
-
-</section>
-<section data-transition="default" data-transition-speed="default">
-<h3>Thanks for watching!</h3>
-<div class="slideContent" >
-<p>Now go a play my Shiny App:
-&ldquo;<a href="https://jmcastagnetto.shinyapps.io/predict-child-height">Predict the height of your child</a>&rdquo;.</p>
-
-<p>The code for this little monstrosity (including this presentation) is at
-<a href="https://github.com/jmcastagnetto/coursera-data-products-july2015">https://github.com/jmcastagnetto/coursera-data-products-july2015</a></p>
 
 </div>
 
@@ -931,8 +951,8 @@ function commandsForSlide(indexh) {
       transition: 'default',
       transitionSpeed: 'default',
       rtl: false,
-      width: 960,
-      height: 700,
+      width: 1200,
+      height: 900,
     
       dependencies: []
     });
